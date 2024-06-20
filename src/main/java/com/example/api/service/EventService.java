@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.example.api.domain.events.CreateEventDTO;
 import com.example.api.domain.events.Event;
 import com.example.api.domain.events.EventResponseDTO;
+import com.example.api.repositories.AddressRepository;
 import com.example.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,9 @@ public class EventService
     @Autowired
     private EventRepository event_repository;
 
+    @Autowired
+    private AddressService address_service;
+
     public Event create_event(CreateEventDTO create_event_dto)
     {
         String image_url = null;
@@ -51,6 +55,11 @@ public class EventService
         event.setIs_remote(create_event_dto.is_remote());
 
         event_repository.save(event);
+
+        if (!event.getIs_remote())
+        {
+            address_service.create(create_event_dto, event);
+        }
 
         return event;
     }
