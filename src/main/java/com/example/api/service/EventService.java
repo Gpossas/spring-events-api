@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.example.api.domain.events.CreateEventDTO;
 import com.example.api.domain.events.Event;
 import com.example.api.domain.events.EventResponseDTO;
-import com.example.api.repositories.AddressRepository;
 import com.example.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.Calendar;
 
 @Service
 public class EventService
@@ -91,9 +91,21 @@ public class EventService
             Date end_date
     )
     {
+        title = title != null ? title : "";
+        city = city != null ? city : "";
+        uf = uf != null ? uf : "";
+        start_date = start_date != null ? start_date : new Date();
+
+        // Set the year, month, and day to 2099-01-01
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2099);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY); // Months are zero-based in Calendar
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date dateIn2099 = calendar.getTime();
+        end_date = end_date != null ? end_date : dateIn2099; //todo: this is getting the data of 1970 because it's too long to put the current or 10 years in future
+
         Pageable pageable = PageRequest.of(page_number,page_size);
         Page<Event> events_page = this.event_repository.find_filtered_events(
-                new Date(),
                 title,
                 city,
                 uf,
