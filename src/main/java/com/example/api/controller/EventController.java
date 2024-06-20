@@ -5,10 +5,12 @@ import com.example.api.domain.events.Event;
 import com.example.api.domain.events.EventResponseDTO;
 import com.example.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,6 +43,29 @@ public class EventController
     )
     {
         List<EventResponseDTO> events = this.event_service.get_upcoming_events(page_number, page_size);
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EventResponseDTO>> get_filtered_events(
+            @RequestParam(defaultValue = "0") Integer page_number,
+            @RequestParam(defaultValue = "10") Integer page_size,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String uf,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start_date,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end_date
+    )
+    {
+        List<EventResponseDTO> events = this.event_service.get_filtered_events(
+                page_number,
+                page_size,
+                title,
+                city,
+                uf,
+                start_date,
+                end_date
+        );
         return ResponseEntity.ok(events);
     }
 }
