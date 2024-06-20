@@ -102,7 +102,7 @@ public class EventService
         calendar.set(Calendar.MONTH, Calendar.JANUARY); // Months are zero-based in Calendar
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date dateIn2099 = calendar.getTime();
-        end_date = end_date != null ? end_date : dateIn2099; //todo: this is getting the data of 1970 because it's too long to put the current or 10 years in future
+        end_date = end_date != null ? end_date : dateIn2099;
 
         Pageable pageable = PageRequest.of(page_number,page_size);
         Page<Event> events_page = this.event_repository.find_filtered_events(
