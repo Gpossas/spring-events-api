@@ -1,5 +1,6 @@
 package com.example.api.domain.events;
 
+import com.example.api.domain.address.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,4 +37,7 @@ public class Event
 
     @Column
     private Boolean is_remote;
+
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
+    private Address address;
 }
