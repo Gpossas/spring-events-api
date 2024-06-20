@@ -73,8 +73,8 @@ public class EventService
                 event.getTitle(),
                 event.getDescription(),
                 event.getDate(),
-                "",
-                "",
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
                 event.getIs_remote(),
                 event.getImage_url(),
                 event.getEvent_url()
