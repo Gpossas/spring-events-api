@@ -81,6 +81,39 @@ public class EventService
         )).stream().toList();
     }
 
+    public List<EventResponseDTO> get_filtered_events(
+            Integer page_number,
+            Integer page_size,
+            String title,
+            String city,
+            String uf,
+            Date start_date,
+            Date end_date
+    )
+    {
+        Pageable pageable = PageRequest.of(page_number,page_size);
+        Page<Event> events_page = this.event_repository.find_filtered_events(
+                new Date(),
+                title,
+                city,
+                uf,
+                start_date,
+                end_date,
+                pageable
+        );
+        return events_page.map(event -> new EventResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getIs_remote(),
+                event.getImage_url(),
+                event.getEvent_url()
+        )).stream().toList();
+    }
+
     private String upload_image(MultipartFile multipart_file)
     {
         String file_name = UUID.randomUUID() + multipart_file.getOriginalFilename();
