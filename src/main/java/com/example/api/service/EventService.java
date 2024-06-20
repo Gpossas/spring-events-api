@@ -3,9 +3,13 @@ package com.example.api.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.example.api.domain.events.CreateEventDTO;
 import com.example.api.domain.events.Event;
+import com.example.api.domain.events.EventResponseDTO;
 import com.example.api.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,6 +53,23 @@ public class EventService
         event_repository.save(event);
 
         return event;
+    }
+
+    public List<EventResponseDTO> get_events(Integer page_number, Integer page_size)
+    {
+        Pageable pageable = PageRequest.of(page_number,page_size);
+        Page<Event> events_page = this.event_repository.findAll(pageable);
+        return events_page.map(event -> new EventResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                "",
+                "",
+                event.getIs_remote(),
+                event.getImage_url(),
+                event.getEvent_url()
+        )).stream().toList();
     }
 
     private String upload_image(MultipartFile multipart_file)
