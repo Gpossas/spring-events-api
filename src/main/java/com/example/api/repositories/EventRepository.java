@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID>
 {
-    @Query("SELECT event FROM Event event WHERE event.date >= :current_date")
+    @Query("SELECT event FROM Event event LEFT JOIN FETCH event.address address WHERE event.date >= :current_date")
     public Page<Event> find_upcoming_events(@Param("current_date") Date current_date, Pageable pageable);
 
     @Query("SELECT event FROM Event event " +
