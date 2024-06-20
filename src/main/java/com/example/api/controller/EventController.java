@@ -40,7 +40,7 @@ public class EventController
             @RequestParam(defaultValue = "10") Integer page_size
     )
     {
-        List<EventResponseDTO> events = this.event_service.get_events(page_number, page_size);
+        List<EventResponseDTO> events = this.event_service.get_upcoming_events(page_number, page_size);
         return ResponseEntity.ok(events);
     }
 }
